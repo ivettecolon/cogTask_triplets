@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cognitive Tasks Triplet Embeddings</title>
+      
+    <script src="https://unpkg.com/jspsych@7.2.1"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-button-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-fullscreen@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-audio-button-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-audio-keyboard-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.0"></script>
+
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.0"></script>
+    <link href="https://unpkg.com/jspsych@7.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+      
+      
+  </head>
+  <body></body>
+    
+  <script>
+      
+          
+    var jsPsych = initJsPsych({
+        show_progress_bar:true,
+        on_data_update: function(){
+            var file = "cogtask_" + secret_code + "_" + urlvar.workerId;
+            jsPsych.data.addProperties({worker_id: urlvar.workerId});
+            saveData(file, jsPsych.data.get().csv());
+        },
+        on_finish: function(){
+            var file = "cogtask_" + secret_code + "_" + urlvar.workerId;
+            jsPsych.data.addProperties({worker_id: urlvar.workerId});
+            saveData(file, jsPsych.data.get().csv());
+        }
+    });
+      
+
+          /* create timeline */
+    var timeline = [];
+    var secret_code  = jsPsych.randomization.randomID(8);
+      
+    // pulling info re: mechanical turk hit
+    var turkInfo = jsPsych.turk.turkInfo();
+    var urlvar = jsPsych.data.urlVariables();  
+    
+    var preload = {
+        type: jsPsychPreload,
+        auto_preload: true,
+        images: ["resources/task1.jpg",
+                "resources/task2.jpg",
+                "resources/task3.jpg",
+                "resources/task4.jpg",
+                "resources/task5.jpg",
+                "resources/task6.jpg",
+                "resources/task7.jpg",
+                "resources/task8.jpg",
+                "resources/task9.jpg",
+                "resources/task10.jpg",
+                "resources/task11.jpg",
+                "resources/task12.jpg",
+                "resources/task13.jpg",
+                "resources/task14.jpg",
+                "resources/task15.jpg",
+                "resources/task16.jpg",
+                "resources/task17.jpg",
+                "resources/task18.jpg",
+                "resources/task19.jpg",
+                "resources/task20.jpg",
+                "resources/task21.jpg",
+                "resources/task22.jpg",
+                "resources/task23.jpg",
+                "resources/task24.jpg",
+                "resources/task25.jpg",
+                "resources/task26.jpg",
+                "resources/task27.jpg",
+                "resources/task28.jpg",
+                "resources/task29.jpg",
+                "resources/task30.jpg",
+                "resources/task31.jpg",
+                "resources/task32.jpg",
+                "resources/task33.jpg",
+                "resources/task34.jpg",
+                "resources/task35.jpg",
+                "resources/task36.jpg",
+                "resources/task37.jpg",
+                "resources/task38.jpg",
+                "resources/task39.jpg",
+                "resources/task40.jpg",
+                "resources/task41.jpg",
+                "resources/task42.jpg",
+                "resources/task43.jpg",
+                "resources/task44.jpg",
+                "resources/task45.jpg",
+                "resources/task46.jpg",
+                "resources/task47.jpg",
+                "resources/task48.jpg",
+                "resources/task49.jpg",
+                "resources/task50.jpg",
+                "resources/task51.jpg",
+                "resources/task52.jpg",
+                "resources/task53.jpg",
+                "resources/task54.jpg",
+                "resources/task55.jpg",
+                "resources/task56.jpg",
+                "resources/task57.jpg",
+                "resources/task58.jpg",
+                "resources/task59.jpg",
+                "resources/task60.jpg",
+                "resources/task61.jpg",
+                "resources/task62.jpg",
+                "resources/task63.jpg",
+                "resources/task64.jpg",
+                "resources/task65.jpg",
+                "resources/task66.jpg",
+                "resources/task67.jpg",
+                "resources/task68.jpg",
+                "resources/task69.jpg",
+                "resources/task70.jpg",
+                "resources/task71.jpg",
+                "resources/task72.jpg",
+                "resources/task73.jpg",
+                "resources/task74.jpg",
+                "resources/task75.jpg",
+                "resources/task76.jpg",
+                "resources/task77.jpg",
+                "resources/task78.jpg",
+                "resources/task79.jpg",
+                "resources/task80.jpg",
+                "resources/task81.jpg"],
+        show_progress_bar: true,
+        message: "Loading experiment files...",
+        error_message: "Oops! There's a problem loading files. Please refresh the page to try again."
+    }  
+    timeline.push(preload);
+    
+      
+    var cogtask = [{cogtask:"resources/task1.jpg"},
+                    {cogtask:"resources/task2.jpg"},
+                    {cogtask:"resources/task3.jpg"},
+                    {cogtask:"resources/task4.jpg"},
+                    {cogtask:"resources/task5.jpg"},
+                    {cogtask:"resources/task6.jpg"},
+                    {cogtask:"resources/task7.jpg"},
+                    {cogtask:"resources/task8.jpg"},
+                    {cogtask:"resources/task9.jpg"},
+                    {cogtask:"resources/task10.jpg"},
+                    {cogtask:"resources/task11.jpg"},
+                    {cogtask:"resources/task12.jpg"},
+                    {cogtask:"resources/task13.jpg"},
+                    {cogtask:"resources/task14.jpg"},
+                    {cogtask:"resources/task15.jpg"},
+                    {cogtask:"resources/task16.jpg"},
+                    {cogtask:"resources/task17.jpg"},
+                    {cogtask:"resources/task18.jpg"},
+                    {cogtask:"resources/task19.jpg"},
+                    {cogtask:"resources/task20.jpg"},
+                    {cogtask:"resources/task21.jpg"},
+                    {cogtask:"resources/task22.jpg"},
+                    {cogtask:"resources/task23.jpg"},
+                    {cogtask:"resources/task24.jpg"},
+                    {cogtask:"resources/task25.jpg"},
+                    {cogtask:"resources/task26.jpg"},
+                    {cogtask:"resources/task27.jpg"},
+                    {cogtask:"resources/task28.jpg"},
+                    {cogtask:"resources/task29.jpg"},
+                    {cogtask:"resources/task30.jpg"},
+                    {cogtask:"resources/task31.jpg"},
+                    {cogtask:"resources/task32.jpg"},
+                    {cogtask:"resources/task33.jpg"},
+                    {cogtask:"resources/task34.jpg"},
+                    {cogtask:"resources/task35.jpg"},
+                    {cogtask:"resources/task36.jpg"},
+                    {cogtask:"resources/task37.jpg"},
+                    {cogtask:"resources/task38.jpg"},
+                    {cogtask:"resources/task39.jpg"},
+                    {cogtask:"resources/task40.jpg"},
+                    {cogtask:"resources/task41.jpg"},
+                    {cogtask:"resources/task42.jpg"},
+                    {cogtask:"resources/task43.jpg"},
+                    {cogtask:"resources/task44.jpg"},
+                    {cogtask:"resources/task45.jpg"},
+                    {cogtask:"resources/task46.jpg"},
+                    {cogtask:"resources/task47.jpg"},
+                    {cogtask:"resources/task48.jpg"},
+                    {cogtask:"resources/task49.jpg"},
+                    {cogtask:"resources/task50.jpg"},
+                    {cogtask:"resources/task51.jpg"},
+                    {cogtask:"resources/task52.jpg"},
+                    {cogtask:"resources/task53.jpg"},
+                    {cogtask:"resources/task54.jpg"},
+                    {cogtask:"resources/task55.jpg"},
+                    {cogtask:"resources/task56.jpg"},
+                    {cogtask:"resources/task57.jpg"},
+                    {cogtask:"resources/task58.jpg"},
+                    {cogtask:"resources/task59.jpg"},
+                    {cogtask:"resources/task60.jpg"},
+                    {cogtask:"resources/task61.jpg"},
+                    {cogtask:"resources/task62.jpg"},
+                    {cogtask:"resources/task63.jpg"},
+                    {cogtask:"resources/task64.jpg"},
+                    {cogtask:"resources/task65.jpg"},
+                    {cogtask:"resources/task66.jpg"},
+                    {cogtask:"resources/task67.jpg"},
+                    {cogtask:"resources/task68.jpg"},
+                    {cogtask:"resources/task69.jpg"},
+                    {cogtask:"resources/task70.jpg"},
+                    {cogtask:"resources/task71.jpg"},
+                    {cogtask:"resources/task72.jpg"},
+                    {cogtask:"resources/task73.jpg"},
+                    {cogtask:"resources/task74.jpg"},
+                    {cogtask:"resources/task75.jpg"},
+                    {cogtask:"resources/task76.jpg"},
+                    {cogtask:"resources/task77.jpg"},
+                    {cogtask:"resources/task78.jpg"},
+                    {cogtask:"resources/task79.jpg"},
+                    {cogtask:"resources/task80.jpg"},
+                    {cogtask:"resources/task81.jpg"}];
+      
+      var cogtask_arr = ["resources/task1.jpg",
+                "resources/task2.jpg",
+                "resources/task3.jpg",
+                "resources/task4.jpg",
+                "resources/task5.jpg",
+                "resources/task6.jpg",
+                "resources/task7.jpg",
+                "resources/task8.jpg",
+                "resources/task9.jpg",
+                "resources/task10.jpg",
+                "resources/task11.jpg",
+                "resources/task12.jpg",
+                "resources/task13.jpg",
+                "resources/task14.jpg",
+                "resources/task15.jpg",
+                "resources/task16.jpg",
+                "resources/task17.jpg",
+                "resources/task18.jpg",
+                "resources/task19.jpg",
+                "resources/task20.jpg",
+                "resources/task21.jpg",
+                "resources/task22.jpg",
+                "resources/task23.jpg",
+                "resources/task24.jpg",
+                "resources/task25.jpg",
+                "resources/task26.jpg",
+                "resources/task27.jpg",
+                "resources/task28.jpg",
+                "resources/task29.jpg",
+                "resources/task30.jpg",
+                "resources/task31.jpg",
+                "resources/task32.jpg",
+                "resources/task33.jpg",
+                "resources/task34.jpg",
+                "resources/task35.jpg",
+                "resources/task36.jpg",
+                "resources/task37.jpg",
+                "resources/task38.jpg",
+                "resources/task39.jpg",
+                "resources/task40.jpg",
+                "resources/task41.jpg",
+                "resources/task42.jpg",
+                "resources/task43.jpg",
+                "resources/task44.jpg",
+                "resources/task45.jpg",
+                "resources/task46.jpg",
+                "resources/task47.jpg",
+                "resources/task48.jpg",
+                "resources/task49.jpg",
+                "resources/task50.jpg",
+                "resources/task51.jpg",
+                "resources/task52.jpg",
+                "resources/task53.jpg",
+                "resources/task54.jpg",
+                "resources/task55.jpg",
+                "resources/task56.jpg",
+                "resources/task57.jpg",
+                "resources/task58.jpg",
+                "resources/task59.jpg",
+                "resources/task60.jpg",
+                "resources/task61.jpg",
+                "resources/task62.jpg",
+                "resources/task63.jpg",
+                "resources/task64.jpg",
+                "resources/task65.jpg",
+                "resources/task66.jpg",
+                "resources/task67.jpg",
+                "resources/task68.jpg",
+                "resources/task69.jpg",
+                "resources/task70.jpg",
+                "resources/task71.jpg",
+                "resources/task72.jpg",
+                "resources/task73.jpg",
+                "resources/task74.jpg",
+                "resources/task75.jpg",
+                "resources/task76.jpg",
+                "resources/task77.jpg",
+                "resources/task78.jpg",
+                "resources/task79.jpg",
+                "resources/task80.jpg",
+                "resources/task81.jpg"];
+              
+      
+      
+      // NEED: TO DEFINE STANDARD TRIPLETS THAT EVERYONE WILL SEE!!!!
+      //SO MAYBE LIKE 12 PAIRS OR SO?
+    
+   //to shuffle the array of button choices at the beginning of the experiment   
+    function shuffle(array) {
+        let currentIndex = array.length,  randomIndex;
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+        
+    var test_stimuli = [];
+    
+    // to get a random item from the array
+    function getRandomItems(arr) {
+        var temp_array = jsPsych.randomization.sampleWithoutReplacement(arr, 2);
+          arr = arr.filter(e => e !== temp_array[0]);
+          arr = arr.filter(e => e !== temp_array[1]);
+        return temp_array;
+    }
+      
+      
+    /* define welcome message trial */
+    var welcome = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+    timeline.push(welcome);
+      
+      
+    timeline.push({
+      type: jsPsychFullscreen,
+      fullscreen_mode: true
+    });    
+         
+    /* define consent trail */
+    var consent = {
+        type: jsPsychImageButtonResponse,
+        stimulus: "consent_form_SONA.png",
+        choices: ["Consent & Continue"]
+    };
+    timeline.push(consent);
+      
+      
+          
+    /* define testing instructions */
+    var instructions = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: "<p>In each trial of this task, you will see three cognitive tasks: one task at the top of the screen, and two tasks below." +
+        "</p><p>For each trial, <strong>please select the cognitive task from the two cognitive tasks at the bottom of the screen that is most similar to the cognitive task at the top of the screen.</strong>"+
+        "<p>There will be 100 trials in total."+
+          "<p>Click 'Continue' to begin the test.</p>",
+        choices: ["Continue"],
+      post_trial_gap: 2000
+    };
+    timeline.push(instructions);  
+      
+      
+      var fixation = {
+          type: jsPsychHtmlKeyboardResponse,
+            stimulus: '+',
+            choices: "NO_KEYS",
+            trial_duration: 500
+        };
+      timeline.push(fixation);
+      
+      var arr_pair = [];
+
+      // define the trials!
+
+      var trial = {
+          type: jsPsychImageButtonResponse,
+          stimulus: jsPsych.timelineVariable('cogtask'),
+          choices: function(){
+              shuffle(cogtask_arr);
+              arr_pair = getRandomItems(cogtask_arr);
+              // Add "I don't know" as one of the choices
+              arr_pair.push("dont_know.jpg");
+              return arr_pair;
+          },
+          button_html: '<button class="jspsych-btn"><img src= %choice%></button>',
+          on_finish: function(data){
+              shuffle(cogtask_arr);
+              data.choices = arr_pair;
+          }
+      };
+
+      
+      
+      // defining the procedure!
+      
+        var cogtask_procedure = {
+            timeline: [fixation, trial],
+            timeline_variables: cogtask,
+            randomize_order: true,
+            sample: {
+                type: 'with-replacement',
+                size: 100
+            }
+        };
+
+
+      timeline.push(cogtask_procedure);
+
+
+      
+var demographic_instructions = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: "<p>Awesome!<p>For this last part of the experiment, please provide us with information about yourself.</p> ",
+      choices: ["Continue"],
+      post_trial_gap: 1000
+    };
+// timeline.push(demographic_instructions);
+      
+
+
+
+    // Question 1: Graduate student or completed a graduate degree
+    var gradQuestions = {
+      type: jsPsychSurveyMultiChoice,
+      questions: [
+        {
+          prompt: 'Are you currently a graduate student or have you completed a graduate degree in a field that involves cognitive science/the use of cognitive science tasks (e.g., psychology, cognitive science, neuroscience, education, etc)?',
+          options: ['Yes, I am a graduate student', 'Yes, I have completed a graduate degree', 'No'],
+          required: true
+        }
+      ],
+      preamble: 'Please select the option that applies to you:',
+      button_label: 'Next'
+    };
+    timeline.push(gradQuestions);
+
+    // Question 2: Years conducting research
+    var researchYears = {
+      type: jsPsychSurveyText,
+      questions: [
+        {
+          prompt: 'How many years have you been conducting research in cognitive-science or related domains? Please enter your answer in the box below.',
+          placeholder: 'Enter years here...',
+          rows: 1,
+          columns: 20,
+          required: true
+        }
+      ],
+      button_label: 'Next'
+    };
+    timeline.push(researchYears);
+
+    // Question 3: Sub-domain research checkboxes
+    var subDomainResearch = {
+      type: jsPsychSurveyMultiSelect,
+      questions: [
+        {
+          prompt: 'Please check the box next to each sub-domain in which you have conducted research yourself.',
+          options: [
+            'Attention (e.g., sustained, selective, divided)',
+            'Executive Function',
+            'Short-term memory',
+            'Working memory',
+            'Long-term memory (e.g., semantic, episodic)',
+            'Intelligence/problem solving',
+            'Judgment and decision making',
+            'Creativity',
+            'Spatial cognition (e.g., visualization, mental rotation, perspective taking)',
+            'Math/numerical cognition',
+            'Language processing',
+            'Categorization/concept formation',
+            'Action/motor control',
+            'Speed of processing',
+            'Perception (e.g., vision, audition, touch, taste, smell, vestibular)',
+            'Development',
+            'Learning',
+            'Other'
+          ],
+          required: true
+        }
+      ],
+      button_label: 'Next'
+    };
+    timeline.push(subDomainResearch);
+
+    // Question 4: Tasks for each category
+    var tasksQuestions = {
+      type: jsPsychSurveyText,
+      questions: [
+        {
+          prompt: '<b>For each of the following categories of cognitive functions, please list up to 5 exemplars of tasks used to measure them.</b>'+
+            "<br>A few notes:<br>1) The tasks you list should sit squarely in the given category. If a task comes to mind that you think fits in between several of the listed categories or outside of any of the categories, you will list it in the next question."+
+            "<br>2) You don\'t have to list tasks for every category. If no tasks from a given category immediately come to mind, you may skip it."+
+            "<br>3) Be sure to consider computer-based tasks, paper-based tasks, or other modes of testing when answering, if relevant."+
+            '<br>4) If the task does not have a name, describe it to the best of your ability in as few words as possible (e.g., if you know a citation, a research group, etc that uses the task).',
+          rows: 10,
+          columns: 60,
+          required: true
+        }
+      ],
+      button_label: 'Next'
+    };
+    timeline.push(tasksQuestions);
+
+    // Question 5: Tasks not fitting into listed categories
+    var tasksNotFitQuestions = {
+      type: jsPsychSurveyText,
+      questions: [
+        {
+          prompt: 'In the boxes below please list any cognitive tasks that you have used or know of and believe are important in cognitive science research, but do not fit into any of the listed categories (e.g., contain elements from a mixture of categories or don\'t fit with any of the listed categories).',
+          rows: 10,
+          columns: 60
+        }
+      ],
+      button_label: 'Next'
+    };
+    timeline.push(tasksNotFitQuestions);
+
+    // Question 6: Tasks and their fitting categories
+    var fittingCategoriesQuestions = {
+      type: jsPsychSurveyText,
+      questions: [
+        {
+          prompt: 'In which categories do you believe this task fits?',
+          rows: 10,
+          columns: 60
+        }
+      ],
+      button_label: 'Next'
+    };
+    timeline.push(fittingCategoriesQuestions);
+
+    // Final message and redirection
+    var endMessage = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: 'Thank you for your participation in this survey. To complete the experiment, please click the button below:',
+      choices: ['<a href="https://uwmadison.co1.qualtrics.com/jfe/form/SV_byhUWgGt0uGyBH8?sub_id=' + urlvar.workerId + '" target="_blank">Complete Experiment</a>']
+    };
+    timeline.push(endMessage);
+      
+      
+//      
+//    var goodbye = {
+//     type: jsPsychHtmlButtonResponse,
+//     stimulus: 'You have finished the experiment. Thank you for your patience. <br>' +
+//               'To complete the experiment, please click the button below:<br><br>',
+//     choices: ['<a href="https://uwmadison.co1.qualtrics.com/jfe/form/SV_byhUWgGt0uGyBH8?sub_id=' + urlvar.workerId + '" target="_blank">Complete Experiment</a>']
+//    };
+//      
+//     timeline.push(goodbye);
+
+
+      
+      
+    function saveData(name, data){
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'data_write.php'); // 'write_data.php' is the path to the php file described above.
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({filename: name, filedata: data}));
+    }
+       
+      
+    jsPsych.run(timeline);
+
+
+
+  </script>
+  </html>
+
+<!--
+
+-->

@@ -11,7 +11,6 @@
     <script src="https://unpkg.com/@jspsych/plugin-audio-button-response@1.1.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-audio-keyboard-response@1.1.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.0"></script>
-
     <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@1.1.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.0"></script>
@@ -19,6 +18,7 @@
     <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.0"></script>
     <link href="https://unpkg.com/jspsych@7.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+      <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
       
       
   </head>
@@ -30,24 +30,34 @@
     var jsPsych = initJsPsych({
         show_progress_bar:true,
         on_data_update: function(){
-            var file = "cogtask_" + secret_code + "_" + urlvar.workerId;
-            jsPsych.data.addProperties({worker_id: urlvar.workerId});
-            saveData(file, jsPsych.data.get().csv());
+            jsPsych.data.addProperties({p_id: secret_code});
+            timeline.push(save_data);
         },
         on_finish: function(){
-            var file = "cogtask_" + secret_code + "_" + urlvar.workerId;
-            jsPsych.data.addProperties({worker_id: urlvar.workerId});
-            saveData(file, jsPsych.data.get().csv());
+            jsPsych.data.addProperties({p_id: secret_code});
+            timeline.push(save_data);
         }
     });
+      
+          // this is to save to OSF using DataPipe
+
+        var secret_code  = jsPsych.randomization.randomID(8);
+      const filename = "cogtask_" + secret_code
+      
+      
+        const save_data = {
+                type: jsPsychPipe,
+                action: "save",
+                experiment_id: "oE6gjFOzG4jZ",
+                filename: filename,
+                data_string: ()=>jsPsych.data.get().csv()
+        };
       
 
           /* create timeline */
     var timeline = [];
-    var secret_code  = jsPsych.randomization.randomID(8);
       
     // pulling info re: mechanical turk hit
-    var turkInfo = jsPsych.turk.turkInfo();
     var urlvar = jsPsych.data.urlVariables();  
     
     var preload = {
@@ -305,8 +315,6 @@
                 "resources/task80.jpg",
                 "resources/task81.jpg"];
               
-      
-      
       // NEED: TO DEFINE STANDARD TRIPLETS THAT EVERYONE WILL SEE!!!!
       //SO MAYBE LIKE 12 PAIRS OR SO?
     
@@ -363,7 +371,8 @@
     var instructions = {
       type: jsPsychHtmlButtonResponse,
       stimulus: "<p>In each trial of this task, you will see three cognitive tasks: one task at the top of the screen, and two tasks below." +
-        "</p><p>For each trial, <strong>please select the cognitive task from the two cognitive tasks at the bottom of the screen that is most similar to the cognitive task at the top of the screen.</strong>"+
+        "</p><p>For each trial, <strong>please select one of the two cognitive tasks at the bottom of the screen that is most similar to the cognitive task at the top of the screen.</strong><br>"+
+        "If you do not know either task on the bottom, please select &quot;I don&apos;t know&quot;." +
         "<p>There will be 100 trials in total."+
           "<p>Click 'Continue' to begin the test.</p>",
         choices: ["Continue"],
@@ -386,6 +395,7 @@
 
       var trial = {
           type: jsPsychImageButtonResponse,
+          prompt: "Select the task most similar to the task on top.",
           stimulus: jsPsych.timelineVariable('cogtask'),
           choices: function(){
               shuffle(cogtask_arr);
@@ -393,20 +403,52 @@
               // Add "I don't know" as one of the choices
               arr_pair.push("dont_know.jpg");
               return arr_pair;
-          },
+            },
           button_html: '<button class="jspsych-btn"><img src= %choice%></button>',
           on_finish: function(data){
               shuffle(cogtask_arr);
-              data.choices = arr_pair;
+                data.choice_1 = arr_pair[0];
+                data.choice_2 = arr_pair[1];
+                n = 1;
+                var data_last1 = jsPsych.data.get().last(n);
+                lasttrialdata_rt = data_last1.select('rt').mean();
+                if (lasttrialdata_rt < 900){
+                      data.speedy = true;
+                    } else {
+                      data.speedy = false;}
+            }
+       
           }
-      };
+      
+      
+      
+        var if_trial_speed = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "<p><strong>You're going too fast.</strong><p>Please slow down and assess each pair of images." +
+                  "<p>Press 'y' to continue.</p></p>",
+            choices: ["y"]
+        }
 
+        var if_node_speed = {
+            timeline: [if_trial_speed],
+            conditional_function: function(){
+                // get the data from the previous trial,
+                var last_trial_speed = jsPsych.data.get().last(1).values()[0].speedy;
+                if(last_trial_speed){
+                    return true; // the parameter value has to be returned from the function;
+                } else{
+                    return false;
+                }
+            }
+        }
+    
+      
       
       
       // defining the procedure!
       
         var cogtask_procedure = {
-            timeline: [fixation, trial],
+            timeline: [fixation, trial, if_node_speed],
             timeline_variables: cogtask,
             randomize_order: true,
             sample: {
@@ -437,7 +479,7 @@ var demographic_instructions = {
       questions: [
         {
           prompt: 'Are you currently a graduate student or have you completed a graduate degree in a field that involves cognitive science/the use of cognitive science tasks (e.g., psychology, cognitive science, neuroscience, education, etc)?',
-          options: ['Yes, I am a graduate student', 'Yes, I have completed a graduate degree', 'No'],
+          options: ['Yes, I am a graduate student', 'Yes, I have completed a graduate degree', 'No, I am an undergraduate student'],
           required: true
         }
       ],
@@ -461,6 +503,15 @@ var demographic_instructions = {
       button_label: 'Next'
     };
     timeline.push(researchYears);
+      
+      var subfield_question = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+        {prompt: "How would you rate your expertise in your subfield?", options: ["Novice", "Intermediate", "Advanced", "Expert"]}
+    ],
+    preamble: "Please indicate your level of expertise in your subfield:",
+    required: true
+};
 
     // Question 3: Sub-domain research checkboxes
     var subDomainResearch = {
@@ -494,6 +545,33 @@ var demographic_instructions = {
       button_label: 'Next'
     };
     timeline.push(subDomainResearch);
+      
+      
+
+// Country of Research
+var country_question = {
+    type: jsPsychSurveyText,
+    questions: [
+        {prompt: "What country do you do research in?", placeholder: "Your answer"}
+    ],
+    preamble: "Please provide the country where you conduct your research:",
+    required: true
+};
+      timeline.push(country_question);
+
+// University
+var university_questions = {
+    type: jsPsychSurveyText,
+    questions: [
+        {prompt: "What university are you affiliated with?", placeholder: "Your answer"},
+        {prompt: "What department are you affiliated with?", placeholder: "Your answer"},
+        {prompt: "What lab are you affiliated with? (You may leave this blank if not applicable)", placeholder: "Your answer"}
+    ],
+    required: false
+};
+timeline.push(university_questions);
+
+      
 
     // Question 4: Tasks for each category
     var tasksQuestions = {
@@ -541,12 +619,17 @@ var demographic_instructions = {
       button_label: 'Next'
     };
     timeline.push(fittingCategoriesQuestions);
+      
+      
+      
+      
+      
 
     // Final message and redirection
     var endMessage = {
       type: jsPsychHtmlButtonResponse,
       stimulus: 'Thank you for your participation in this survey. To complete the experiment, please click the button below:',
-      choices: ['<a href="https://uwmadison.co1.qualtrics.com/jfe/form/SV_byhUWgGt0uGyBH8?sub_id=' + urlvar.workerId + '" target="_blank">Complete Experiment</a>']
+      choices: ['Complete Experiment']
     };
     timeline.push(endMessage);
       
@@ -572,7 +655,11 @@ var demographic_instructions = {
     }
        
       
+      
+    timeline.push(save_data);
+
     jsPsych.run(timeline);
+
 
 
 
